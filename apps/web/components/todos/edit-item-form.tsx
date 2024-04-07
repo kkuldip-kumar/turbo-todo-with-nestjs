@@ -5,6 +5,7 @@ import * as yup from "yup"
 const schema = yup.object().shape({
     title: yup.string().required('Title is  required'),
     content: yup.string().required('Description is required'),
+    status: yup.string().required('Status is required'),
 })
     .required()
 
@@ -24,7 +25,7 @@ export const EditItemForm = ({ item }: props) => {
     const mutation = useMutation({
         mutationFn: updateItem,
         onSuccess: () => {
-            queryClient.invalidateQueries(`todos`);
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
         }
     })
     console.log('item for edit', itemForEdit)
@@ -34,11 +35,11 @@ export const EditItemForm = ({ item }: props) => {
         reset,
         control,
         formState: { errors },
-    } = useForm({
+    } = useForm<Todo>({
         resolver: yupResolver(schema),
         defaultValues: itemForEdit,
     });
-    const onSubmit = async (values) => {
+    const onSubmit = async (values: Todo) => {
         if (values) {
             try {
                 const res = await mutation.mutateAsync(values)
@@ -46,11 +47,6 @@ export const EditItemForm = ({ item }: props) => {
                 reset({});
                 router.replace(
                     pathname,
-                    {
-                        pathname: router.pathname,
-                        query: '',
-                    },
-                    { scroll: false }
                 );
             } catch (error) {
                 console.log('error', error)

@@ -7,7 +7,6 @@ type props = {
     id: string
 }
 export const ActionButtons = ({ id }: props) => {
-    console.log('action')
     const router = useRouter();
     const pathname = usePathname();
     const searchParams = useSearchParams();
@@ -16,7 +15,7 @@ export const ActionButtons = ({ id }: props) => {
     const mutation = useMutation({
         mutationFn: deleteItem,
         onSuccess: () => {
-            queryClient.invalidateQueries('todos');
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
         }
     });
     const removeTodo = useCallback(async () => {

@@ -21,7 +21,7 @@ export const AddItemForm = () => {
     const mutation = useMutation({
         mutationFn: createItem,
         onSuccess: () => {
-            queryClient.invalidateQueries(`todos`);
+            queryClient.invalidateQueries({ queryKey: ['todos'] });
         }
     })
     const {
@@ -30,11 +30,11 @@ export const AddItemForm = () => {
         reset,
         control,
         formState: { errors },
-    } = useForm({
+    } = useForm<Todo>({
         resolver: yupResolver(schema),
         defaultValues: initialTodo,
     });
-    const onSubmit = async (values) => {
+    const onSubmit = async (values: Todo) => {
         if (values) {
             try {
                 const res = await mutation.mutateAsync(values)

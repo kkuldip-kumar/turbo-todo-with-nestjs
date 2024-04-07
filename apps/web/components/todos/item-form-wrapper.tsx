@@ -11,12 +11,12 @@ import { Todo } from "./todo-type";
 export const ItemFormWrapper = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const todoId = searchParams.get("todo_id");
+  const todoId = searchParams.get("todo_id") || "";
   const Id = useMemo(() => todoId, [todoId])
   const { isLoading, isFetching, refetch, isError, data, error } = useQuery({
     queryKey: ["todos"],
     enabled: Id ? true : false,
-    queryFn: getItemById(Id)
+    queryFn: async () => getItemById(Id)
   });
   console.count('wrapper')
   useEffect(() => {

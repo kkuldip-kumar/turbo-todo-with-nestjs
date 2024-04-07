@@ -3,46 +3,45 @@ import { Todo, TodoList } from '../todo-type'
 export const getAllItems = async () => {
   try {
     const res = await http.get(`todos`);
-    console.log("data", res.data);
-    return res.data as TodoList;
+    const list: TodoList = res.data;
+    return list;
   } catch (error) {
-    console.log("error", error);
+    return error
   }
 };
 
-export const getItemById = async (params) => {
+export const getItemById = async (params: string) => {
   try {
     const res = await http.get(`todos/${params}`);
-    return res.data as Todo;
-
+    if (!res.data) throw new Error('no data found')
+    const item: Todo = res.data;
+    return item
   } catch (error) {
     return error
   }
 };
-export const createItem = async (data) => {
+export const createItem = async (data: Todo) => {
   try {
     const res = await http.post(`todos`, data);
-    return res.data
+    return 'created'
   } catch (error) {
     return error
   }
 };
 
-export const updateItem = async (data) => {
+export const updateItem = async (data: Todo) => {
   try {
     const res = await http.put(`todos/${data.id}`, data);
-    console.log("data", res.data);
-    return res.data;
+    return 'updated';
   } catch (error) {
     console.log("error", error);
   }
 };
-export const deleteItem = async (id) => {
+export const deleteItem = async (id: string) => {
   // delete(params) {
   try {
     const res = await http.delete(`todos/${id}`);
-    console.log("reletesd", res.data);
-    return res.data;
+    return 'deleted';
   } catch (error) {
     console.log("error", error);
   }
